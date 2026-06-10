@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmLedger — Crop Financial Intelligence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="variables.css">
+  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+
+<body>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ===== MAIN APP ===== -->
+  <div class="page active" id="appPage">
+    <div class="hamburger" onclick="toggleSidebar()">☰</div>
+
+    <div class="app-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-decoration">🌾</div>
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">🌾</div>
+          <div>
+            <div class="sidebar-logo-text">FarmLedger</div>
+            <div class="sidebar-logo-sub">Crop Intelligence</div>
+          </div>
+        </div>
+
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar" id="sidebarAvatar">RK</div>
+          <div class="sidebar-user-name" id="sidebarName">Ramesh Kumar</div>
+          <div class="sidebar-user-loc" id="sidebarLoc">📍 Nashik, Maharashtra</div>
+          <div class="sidebar-user-land">🌿 Total Land: <span id="sidebarLand">12.5</span> acres</div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-section-label">Overview</div>
+          <div class="nav-item active" onclick="switchTab('dashboard', this)">
+            <span class="nav-icon">📊</span> Dashboard
+          </div>
+
+          <div class="nav-section-label" style="margin-top:18px;">Farm Management</div>
+          <div class="nav-item" onclick="switchTab('crops', this)">
+            <span class="nav-icon">🌱</span> My Crops
+            <span class="nav-badge" id="cropCountBadge">0</span>
+          </div>
+          <div class="nav-item" onclick="switchTab('expenses', this)">
+            <span class="nav-icon">💸</span> Expenses
+          </div>
+          <div class="nav-item" onclick="switchTab('sales', this)">
+            <span class="nav-icon">📈</span> Sales & Revenue
+          </div>
+          <div class="nav-item" onclick="switchTab('udhari', this)">
+            <span class="nav-icon">📓</span> Udhari Khata
+          </div>
+
+          <div class="nav-section-label" style="margin-top:18px;">Analysis</div>
+          <div class="nav-item" onclick="switchTab('compare', this)">
+            <span class="nav-icon">⚖️</span> Year Compare
+            <span style="margin-left:auto;font-size:9px;background:rgba(212,168,83,0.2);color:var(--wheat);padding:2px 8px;border-radius:5px;letter-spacing:1px;">BETA</span>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="btn-logout" onclick="handleLogout()">
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+      </aside>
+      
+      <!-- Sidebar Backdrop for Mobile -->
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content" id="mainContent">
+
+        <!-- ===== DASHBOARD TAB ===== -->
+        <div id="tab-dashboard">
+          <div class="page-header dashboard-header">
+            <div class="carousel-wrap" id="dashCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1400&q=80');"></div>
+            </div>
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="setCarousel('dashCarousel', 0)">Overview</div>
+              <div class="carousel-dot" onclick="setCarousel('dashCarousel', 1)">Fields</div>
+              <div class="carousel-dot" onclick="setCarousel('dashCarousel', 2)">Harvest</div>
+              <div class="carousel-dot" onclick="setCarousel('dashCarousel', 3)">Growth</div>
+              <div class="carousel-dot" onclick="setCarousel('dashCarousel', 4)">Aerial</div>
+              <div class="carousel-dot" onclick="setCarousel('dashCarousel', 5)">Farmer</div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <!-- Floating particles -->
+            <div class="page-header-particles">
+              <div class="particle" style="width:6px;height:6px;left:15%;top:30%;--dur:4s;--delay:0s;"></div>
+              <div class="particle" style="width:4px;height:4px;left:30%;top:60%;--dur:5s;--delay:1s;"></div>
+              <div class="particle" style="width:8px;height:8px;left:60%;top:25%;--dur:3.5s;--delay:0.5s;opacity:0.15;"></div>
+              <div class="particle" style="width:5px;height:5px;left:75%;top:70%;--dur:4.5s;--delay:2s;"></div>
+            </div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Overview</div>
+              <div class="page-title">Good morning, <span id="greetName">Farmer</span> 👋</div>
+              <div class="page-desc" id="greetDate">Loading season summary…</div>
+              <button class="btn-primary" onclick="exportReport()" style="width:auto; display:inline-flex; align-items:center; gap:8px; padding:10px 18px; font-size:13px; margin-top:16px; background:var(--grad-harvest); box-shadow: 0 4px 14px rgba(204,128,0,0.30);">
+                <span>📄</span> Export PDF Report
+              </button>
+            </div>
+            <div class="profile-menu-wrap" id="profileMenuWrap">
+              <button class="profile-avatar-btn" id="profileAvatarBtn" onclick="toggleProfileMenu()">
+                <div class="profile-avatar-circle" id="profileAvatarCircle">RK</div>
+              </button>
+              <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-dropdown-header">
+                  <div class="profile-dropdown-name" id="profileDropName">Ramesh Kumar</div>
+                  <div class="profile-dropdown-email" id="profileDropEmail">demo@farm.com</div>
+                </div>
+                <div class="profile-dropdown-divider"></div>
+                <button class="profile-dropdown-item" onclick="openEditProfile()">
+                  <span>✏️</span> Edit Profile
+                </button>
+                <button class="profile-dropdown-item reset" onclick="handleResetData()" style="color: #ef4444;">
+                  <span>🗑️</span> Reset Farm Data
+                </button>
+                <button class="profile-dropdown-item logout" onclick="handleLogout()">
+                  <span>🚪</span> Sign Out
+                </button>
+              </div>
+            </div>
+            <!-- Wave bottom removed -> gradient merge used instead -->
+          </div>
+
+          <div class="dashboard-body">
+            <div class="summary-cards stagger" id="summaryCards">
+              <div class="summary-card expense">
+                <div class="summary-card-trend" id="expenseTrend">0%</div>
+                <div class="summary-card-icon">💸</div>
+                <div class="summary-card-label">Total Expenses</div>
+                <div class="summary-card-value" id="totalExpense">₹0</div>
+                <div class="summary-card-sub">Across all active crops</div>
+              </div>
+              <div class="summary-card revenue">
+                <div class="summary-card-trend" id="revenueTrend">0%</div>
+                <div class="summary-card-icon">💰</div>
+                <div class="summary-card-label">Total Revenue</div>
+                <div class="summary-card-value" id="totalRevenue">₹0</div>
+                <div class="summary-card-sub">From all sales recorded</div>
+              </div>
+              <div class="summary-card profit" id="profitCard">
+                <div class="summary-card-trend trend-up" id="profitTrend">—</div>
+                <div class="summary-card-icon">📊</div>
+                <div class="summary-card-label">Net Profit / Loss</div>
+                <div class="summary-card-value" id="totalProfit">₹0</div>
+                <div class="summary-card-sub">Revenue minus expenses</div>
+              </div>
+            </div>
+
+            <!-- Weather Card -->
+            <div id="weatherCardContainer" style="margin-bottom: 30px; display: none;"></div>
+
+            <div class="charts-grid">
+              <div class="chart-card">
+                <div class="chart-card-header">
+                  <div>
+                    <div class="chart-card-title">Cost per Acre</div>
+                    <div class="chart-card-sub">Expense efficiency by crop</div>
+                  </div>
+                </div>
+                <div class="chart-card-body chart-container" style="height: 260px; position: relative;">
+                  <canvas id="costPerAcreChart"></canvas>
+                </div>
+              </div>
+
+              <div class="chart-card">
+                <div class="chart-card-header">
+                  <div>
+                    <div class="chart-card-title">Expense by Category</div>
+                    <div class="chart-card-sub">Where your money goes</div>
+                  </div>
+                </div>
+                <div class="chart-card-body chart-container" style="height: 260px; position: relative;">
+                  <canvas id="catBreakdownChart"></canvas>
+                </div>
+              </div>
+
+              <div class="chart-card">
+                <div class="chart-card-header">
+                  <div>
+                    <div class="chart-card-title">Land Usage Distribution</div>
+                    <div class="chart-card-sub">How your land is allocated</div>
+                  </div>
+                </div>
+                <div class="chart-card-body chart-container" style="height: 260px; position: relative;">
+                  <canvas id="landPieChart"></canvas>
+                </div>
+              </div>
+
+              <div class="chart-card">
+                <div class="chart-card-header">
+                  <div>
+                    <div class="chart-card-title">Crop-wise Expenses</div>
+                    <div class="chart-card-sub">Category breakdown per crop</div>
+                  </div>
+                </div>
+                <div class="chart-card-body chart-container" style="height: 260px; position: relative;">
+                  <canvas id="cropExpChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-card-header" style="padding:22px 26px;">
+                <div>
+                  <div class="chart-card-title">Crops Overview</div>
+                  <div class="chart-card-sub">Financial summary for all your crops</div>
+                </div>
+                <button class="btn-add" onclick="switchTab('crops', null)" style="font-size:13px;padding:9px 18px;">View All →</button>
+              </div>
+              <div class="dash-crop-list stagger" id="dashCropList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== CROPS TAB ===== -->
+        <div id="tab-crops" style="display:none;">
+          <div class="page-header crops-header">
+            <div class="carousel-wrap" id="cropsCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1589923188900-85dae523342b?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1405852800455-1f19c8fcc1df?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=1400&q=80');"></div>
+            </div>
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="setCarousel('cropsCarousel', 0)">All Crops</div>
+              <div class="carousel-dot" onclick="setCarousel('cropsCarousel', 1)">Growth</div>
+              <div class="carousel-dot" onclick="setCarousel('cropsCarousel', 2)">Yield</div>
+              <div class="carousel-dot" onclick="setCarousel('cropsCarousel', 3)">Soil</div>
+              <div class="carousel-dot" onclick="setCarousel('cropsCarousel', 4)">Plowing</div>
+              <div class="carousel-dot" onclick="setCarousel('cropsCarousel', 5)">Terraces</div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <div class="page-header-particles">
+              <div class="particle" style="width:5px;height:5px;left:20%;top:40%;--dur:4s;--delay:0.3s;"></div>
+              <div class="particle" style="width:7px;height:7px;left:50%;top:60%;--dur:5s;--delay:1.2s;"></div>
+            </div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Crops</div>
+              <div class="page-title">My <span>Crops</span></div>
+              <div class="page-desc">Manage all your crop records and track status</div>
+            </div>
+            <div class="page-header-actions">
+              <button class="btn-add" onclick="openModal('addCropModal')">＋ Add New Crop</button>
+            </div>
+            <!-- Wave bottom removed -> gradient merge used instead -->
+          </div>
+          <div class="page-body">
+            <div class="crops-grid stagger" id="cropsGrid"></div>
+          </div>
+        </div>
+
+        <!-- ===== EXPENSES TAB ===== -->
+        <div id="tab-expenses" style="display:none;">
+          <div class="page-header expense-header">
+            <div class="carousel-wrap" id="expenseCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1581579186913-46ea8aee5ee6?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=1400&q=80');"></div>
+            </div>
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="setCarousel('expenseCarousel', 0)">Records</div>
+              <div class="carousel-dot" onclick="setCarousel('expenseCarousel', 1)">Planning</div>
+              <div class="carousel-dot" onclick="setCarousel('expenseCarousel', 2)">Resources</div>
+              <div class="carousel-dot" onclick="setCarousel('expenseCarousel', 3)">Labor</div>
+              <div class="carousel-dot" onclick="setCarousel('expenseCarousel', 4)">Soil</div>
+              <div class="carousel-dot" onclick="setCarousel('expenseCarousel', 5)">Irrigation</div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Expenses</div>
+              <div class="page-title">Expense <span>Tracker</span></div>
+              <div class="page-desc">Record and monitor all your farm expenses</div>
+            </div>
+            <div class="page-header-actions">
+              <button class="btn-add btn-add-amber" onclick="openModal('addExpenseModal')">＋ Add Expense</button>
+            </div>
+            <!-- Wave bottom removed -> gradient merge used instead -->
+          </div>
+
+          <div class="crop-tabs-wrap" id="expenseCropTabs"></div>
+
+          <div class="page-body">
+            <div class="expense-grid">
+              <div class="expense-list-card">
+                <div class="expense-list-header">
+                  <div>
+                    <div style="font-size:15px;font-weight:700;color:var(--soil);">Expense Records</div>
+                    <div style="font-size:12px;color:var(--clay);margin-top:2px;font-weight:500;" id="expenseTabCropName">Select a crop</div>
+                  </div>
+                  <div style="font-size:12px;color:var(--clay);font-weight:600;" id="expenseCount">0 entries</div>
+                </div>
+
+                <!-- Expense Filter Bar -->
+                <div class="filter-bar" style="display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 28px; background: rgba(100, 116, 139, 0.03); border-bottom: 1px solid rgba(100, 116, 139, 0.08);">
+                  <div class="filter-group" style="flex: 1; min-width: 130px;">
+                    <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Crop</label>
+                    <select id="expenseFilterCrop" onchange="selectExpenseCrop(this.value)" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--soil); background: white;">
+                      <option value="all">All Crops</option>
+                    </select>
+                  </div>
+                  <div class="filter-group" style="flex: 1; min-width: 130px;">
+                    <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Category</label>
+                    <select id="expenseFilterCategory" onchange="renderExpenses()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--soil); background: white;">
+                      <option value="all">All Categories</option>
+                      <option value="Seeds">Seeds</option>
+                      <option value="Fertilizer">Fertilizer</option>
+                      <option value="Pesticides">Pesticides</option>
+                      <option value="Labor">Labor</option>
+                      <option value="Machinery">Machinery</option>
+                      <option value="Irrigation">Irrigation</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="filter-group" style="flex: 1; min-width: 150px;">
+                    <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Date Range</label>
+                    <select id="expenseFilterDate" onchange="handleExpenseDateFilterChange()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--soil); background: white;">
+                      <option value="all">All Time</option>
+                      <option value="this-month">This Month</option>
+                      <option value="last-3-months">Last 3 Months</option>
+                      <option value="this-year">This Year</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                  </div>
+                  <div id="expenseCustomDateInputs" style="display: none; width: 100%; gap: 12px; margin-top: 8px;">
+                    <div style="flex: 1;">
+                      <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Start Date</label>
+                      <input type="date" id="expenseFilterStartDate" onchange="renderExpenses()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; color: var(--soil); background: white;">
+                    </div>
+                    <div style="flex: 1;">
+                      <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">End Date</label>
+                      <input type="date" id="expenseFilterEndDate" onchange="renderExpenses()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; color: var(--soil); background: white;">
+                    </div>
+                  </div>
+                </div>
+                <div id="expenseList"></div>
+              </div>
+
+              <div>
+                <div class="expense-summary-card">
+                  <div class="expense-summary-header">
+                    <div class="expense-total-label">Total Expense</div>
+                    <div class="expense-total-value" id="expenseTotalValue">₹0</div>
+                    <div style="font-size:12px;color:rgba(234,216,168,0.5);font-weight:500;position:relative;" id="expenseCardCrop">No crop selected</div>
+                  </div>
+                  <div class="cat-breakdown">
+                    <div class="cat-breakdown-title">Category Breakdown</div>
+                    <div id="catBreakdown"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SALES TAB ===== -->
+        <div id="tab-sales" style="display:none;">
+          <div class="page-header sales-header">
+            <div class="carousel-wrap" id="salesCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1601342630311-8ce2ea87498c?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1563201515-adbe35cbfc45?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1400&q=80');"></div>
+            </div>
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="setCarousel('salesCarousel', 0)">Market</div>
+              <div class="carousel-dot" onclick="setCarousel('salesCarousel', 1)">Transport</div>
+              <div class="carousel-dot" onclick="setCarousel('salesCarousel', 2)">Revenue</div>
+              <div class="carousel-dot" onclick="setCarousel('salesCarousel', 3)">Logistics</div>
+              <div class="carousel-dot" onclick="setCarousel('salesCarousel', 4)">Wheat</div>
+              <div class="carousel-dot" onclick="setCarousel('salesCarousel', 5)">Veggies</div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <div class="page-header-particles">
+              <div class="particle" style="width:6px;height:6px;left:25%;top:50%;--dur:4.5s;--delay:0.8s;"></div>
+              <div class="particle" style="width:4px;height:4px;left:70%;top:35%;--dur:3.5s;--delay:0.2s;"></div>
+            </div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Sales</div>
+              <div class="page-title">Sales & <span>Revenue</span></div>
+              <div class="page-desc">Track your harvest sales and income</div>
+            </div>
+            <div class="page-header-actions">
+              <button class="btn-add" onclick="openModal('addSaleModal')">＋ Record Sale</button>
+            </div>
+            <!-- Wave bottom removed -> gradient merge used instead -->
+          </div>
+
+          <div class="page-body">
+            <div class="summary-cards stagger" style="grid-template-columns:repeat(3,1fr);margin-bottom:32px;">
+              <div class="summary-card revenue" style="padding:24px;">
+                <div class="summary-card-icon">🌾</div>
+                <div class="summary-card-label">Total Sales</div>
+                <div class="summary-card-value" style="font-size:28px;" id="salesTotalRev">₹0</div>
+                <div class="summary-card-sub">All crops combined</div>
+              </div>
+              <div class="summary-card" style="padding:24px;">
+                <div class="summary-card-icon" style="background:rgba(212,168,83,0.12);">📦</div>
+                <div class="summary-card-label">Transactions</div>
+                <div class="summary-card-value" style="font-size:28px;" id="salesTotalTx">0</div>
+                <div class="summary-card-sub">Sale records</div>
+              </div>
+              <div class="summary-card profit" style="padding:24px;">
+                <div class="summary-card-icon">🏆</div>
+                <div class="summary-card-label">Best Crop</div>
+                <div class="summary-card-value" style="font-size:22px;" id="salesBestCrop">—</div>
+                <div class="summary-card-sub">By revenue</div>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <div class="section-title">Sale Records</div>
+            </div>
+
+            <!-- Sales Filter & Sort Bar -->
+            <div class="filter-bar" style="display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 24px; background: rgba(100, 116, 139, 0.03); border: 1px solid rgba(100, 116, 139, 0.08); border-radius: var(--radius); margin-bottom: 24px;">
+              <div class="filter-group" style="flex: 1; min-width: 130px;">
+                <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Crop</label>
+                <select id="salesFilterCrop" onchange="renderSales()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--soil); background: white;">
+                  <option value="all">All Crops</option>
+                </select>
+              </div>
+              <div class="filter-group" style="flex: 1; min-width: 150px;">
+                <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Date Range</label>
+                <select id="salesFilterDate" onchange="handleSalesDateFilterChange()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--soil); background: white;">
+                  <option value="all">All Time</option>
+                  <option value="this-month">This Month</option>
+                  <option value="last-3-months">Last 3 Months</option>
+                  <option value="this-year">This Year</option>
+                  <option value="custom">Custom Range</option>
+                </select>
+              </div>
+              <div class="filter-group" style="flex: 1; min-width: 150px;">
+                <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Sort By</label>
+                <select id="salesSort" onchange="renderSales()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--soil); background: white;">
+                  <option value="date-newest">Date (Newest first)</option>
+                  <option value="date-oldest">Date (Oldest first)</option>
+                  <option value="amount-highest">Amount (Highest first)</option>
+                  <option value="amount-lowest">Amount (Lowest first)</option>
+                </select>
+              </div>
+              <div id="salesCustomDateInputs" style="display: none; width: 100%; gap: 12px; margin-top: 8px;">
+                <div style="flex: 1;">
+                  <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Start Date</label>
+                  <input type="date" id="salesFilterStartDate" onchange="renderSales()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; color: var(--soil); background: white;">
+                </div>
+                <div style="flex: 1;">
+                  <label style="display: block; font-size: 10px; font-weight: 700; color: var(--clay); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">End Date</label>
+                  <input type="date" id="salesFilterEndDate" onchange="renderSales()" style="width: 100%; padding: 8px 12px; border: 1.5px solid rgba(100, 116, 139, 0.15); border-radius: 8px; font-size: 13px; color: var(--soil); background: white;">
+                </div>
+              </div>
+            </div>
+            
+            <div class="sales-grid stagger" id="salesGrid"></div>
+          </div>
+        </div>
+
+        <!-- ===== COMPARE TAB ===== -->
+        <div id="tab-compare" style="display:none;">
+          <div class="page-header compare-header">
+            <div class="carousel-wrap" id="compareCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1589923188900-85dae523342b?w=1400&q=80');"></div>
+            </div>
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="setCarousel('compareCarousel', 0)">Performance</div>
+              <div class="carousel-dot" onclick="setCarousel('compareCarousel', 1)">Timeline</div>
+              <div class="carousel-dot" onclick="setCarousel('compareCarousel', 2)">Scale</div>
+              <div class="carousel-dot" onclick="setCarousel('compareCarousel', 3)">Paddy</div>
+              <div class="carousel-dot" onclick="setCarousel('compareCarousel', 4)">Sprout</div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Analysis</div>
+              <div class="page-title">Year-over-<span>Year</span> Comparison</div>
+              <div class="page-desc">Compare same crops between this year and last year</div>
+            </div>
+            <!-- Wave bottom removed -> gradient merge used instead -->
+          </div>
+
+          <div class="page-body">
+            <div class="summary-cards stagger" style="margin-bottom:32px;" id="yearSummaryCards">
+              <div class="summary-card revenue">
+                <div class="summary-card-icon">📅</div>
+                <div class="summary-card-label">This Year Profit</div>
+                <div class="summary-card-value" id="thisYearProfit">—</div>
+                <div class="summary-card-sub" id="thisYearProfitSub">All crops</div>
+              </div>
+              <div class="summary-card expense">
+                <div class="summary-card-icon">🗓️</div>
+                <div class="summary-card-label">Last Year Profit</div>
+                <div class="summary-card-value" id="lastYearProfit">—</div>
+                <div class="summary-card-sub" id="lastYearProfitSub">All crops</div>
+              </div>
+              <div class="summary-card profit" id="yearDeltaCard">
+                <div class="summary-card-icon">📊</div>
+                <div class="summary-card-label">Change (YoY)</div>
+                <div class="summary-card-value" id="yearDeltaValue">—</div>
+                <div class="summary-card-sub" id="yearDeltaSub">vs last year</div>
+              </div>
+            </div>
+
+            <div class="chart-card" style="margin-bottom:26px;">
+              <div class="chart-card-header">
+                <div>
+                  <div class="chart-card-title">Overall Profit — This Year vs Last Year</div>
+                  <div class="chart-card-sub">Combined farm performance</div>
+                </div>
+              </div>
+              <div class="chart-card-body chart-container" style="height: 300px; position: relative;">
+                <canvas id="yearOverallChart"></canvas>
+              </div>
+            </div>
+
+            <div class="compare-table-wrap">
+              <div style="padding:22px 26px 0;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <div class="chart-card-title">Crop-by-Crop Comparison</div>
+                  <div class="chart-card-sub">Same crop: this year vs last year performance</div>
+                </div>
+              </div>
+              <table class="compare-table" id="compareTable" style="margin-top:14px;">
+                <thead>
+                  <tr>
+                    <th>Crop</th>
+                    <th>This Yr Profit (/ac)</th>
+                    <th>Last Yr Profit (/ac)</th>
+                    <th>Change</th>
+                    <th>This Yr Rev</th>
+                    <th>Last Yr Rev</th>
+                    <th>Land (This Yr)</th>
+                  </tr>
+                </thead>
+                <tbody id="compareTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== UDHARI KHATA TAB ===== -->
+        <div id="tab-udhari" style="display:none;">
+          <div class="page-header udhari-header">
+            <div class="carousel-wrap" id="udhariCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=80');"></div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Credit Ledger</div>
+              <div class="page-title">Udhari Khata <span>(उधारी खाता)</span></div>
+              <div class="page-desc">Track credit ledger: who owes you and who you owe</div>
+            </div>
+            <div class="page-header-actions">
+              <button class="btn-add" onclick="openModal('addUdhariModal')">＋ Add Entry</button>
+            </div>
+          </div>
+
+          <div class="page-body">
+            <!-- Summary cards on top -->
+            <div class="udhari-summary stagger">
+              <div class="udhari-summary-card to-take">
+                <div class="card-icon">📥</div>
+                <div class="card-label">Money to Take</div>
+                <div class="card-value" id="udhariTotalTake">₹0</div>
+                <div class="card-sub">Total money you have to collect</div>
+              </div>
+              <div class="udhari-summary-card to-give">
+                <div class="card-icon">📤</div>
+                <div class="card-label">Money to Give</div>
+                <div class="card-value" id="udhariTotalGive">₹0</div>
+                <div class="card-sub">Total money you have to pay</div>
+              </div>
+            </div>
+
+            <!-- Two Column Layout for lists -->
+            <div class="udhari-columns-grid">
+              <!-- Log dene wale (Receivable) -->
+              <div class="udhari-column-card">
+                <div class="column-header take">
+                  <div class="column-title">📥 Money to Take</div>
+                  <div class="column-badge badge-take" id="udhariCountTake">0 Entries</div>
+                </div>
+                <div class="udhari-list" id="udhariListTake"></div>
+              </div>
+
+              <!-- Main deta hoon (Payable) -->
+              <div class="udhari-column-card">
+                <div class="column-header give">
+                  <div class="column-title">📤 Money to Give</div>
+                  <div class="column-badge badge-give" id="udhariCountGive">0 Entries</div>
+                </div>
+                <div class="udhari-list" id="udhariListGive"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-overlay" id="editProfileModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">👤 Edit Profile</div>
+        <div class="modal-close" onclick="closeModal('editProfileModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="profileEditName" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-input" id="profileEditLocation" placeholder="City, State">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-input" id="profileEditPhone" placeholder="+91 XXXXX XXXXX">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Land (acres)</label>
+            <input type="number" class="form-input" id="profileEditLand" placeholder="e.g. 12.5">
+          </div>
+        </div>
+        <button class="btn-form-submit" onclick="saveProfile()">Save Profile →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Crop Modal -->
+  <div class="modal-overlay" id="addCropModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🌱 Add New Crop</div>
+        <div class="modal-close" onclick="closeModal('addCropModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="position:relative;">
+          <label class="form-label">Crop Name</label>
+          <div class="custom-select" id="addCropCustomSelect" tabindex="0">
+            <div class="custom-select-trigger" onclick="toggleCustomSelect('addCropCustomSelect')">
+              <div class="cs-preview-img" id="addCropSelectImg"></div>
+              <span id="addCropSelectText">Select crop…</span>
+            </div>
+            <div class="custom-select-options" id="addCropSelectOptions"></div>
+          </div>
+          <input type="hidden" id="cropNameSelect">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Land Size</label>
+            <input type="number" class="form-input" placeholder="e.g. 3.5" id="cropLandSize">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select class="form-input" id="cropLandUnit" onchange="updateCropLandPreview()">
+              <option value="acre">Acres</option>
+              <option value="hectare">Hectares</option>
+            </select>
+          </div>
+        </div>
+        <div id="cropLandPreview" style="font-size:12px;color:var(--sage);margin-top:-10px;margin-bottom:14px;font-weight:600;"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Season</label>
+            <select class="form-input" id="cropSeason">
+              <option>Kharif</option>
+              <option>Rabi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-input" id="cropStartDate">
+          </div>
+        </div>
+        <button class="btn-form-submit" onclick="addCrop()">Add Crop to Farm →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Crop Modal -->
+  <div class="modal-overlay" id="editCropModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit Crop</div>
+        <div class="modal-close" onclick="closeModal('editCropModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editCropId">
+        <div class="form-group" style="position:relative;">
+          <label class="form-label">Crop Name</label>
+          <div class="custom-select" id="editCropCustomSelect" tabindex="0">
+            <div class="custom-select-trigger" onclick="toggleCustomSelect('editCropCustomSelect')">
+              <div class="cs-preview-img" id="editCropSelectImg"></div>
+              <span id="editCropSelectText">Select crop…</span>
+            </div>
+            <div class="custom-select-options" id="editCropSelectOptions"></div>
+          </div>
+          <input type="hidden" id="editCropNameSelect">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Land Size</label>
+            <input type="number" class="form-input" placeholder="e.g. 3.5" id="editCropLandSize">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select class="form-input" id="editCropLandUnit" onchange="updateEditCropLandPreview()">
+              <option value="acre">Acres</option>
+              <option value="hectare">Hectares</option>
+            </select>
+          </div>
+        </div>
+        <div id="editCropLandPreview" style="font-size:12px;color:var(--sage);margin-top:-10px;margin-bottom:14px;font-weight:600;"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Season</label>
+            <select class="form-input" id="editCropSeason">
+              <option>Kharif</option>
+              <option>Rabi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-input" id="editCropStartDate">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-input" id="editCropStatus">
+              <option>Growing</option>
+              <option>Harvested</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-form-submit" onclick="saveEditedCrop()">Save Changes →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Expense Modal -->
+  <div class="modal-overlay" id="addExpenseModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">💸 Add Expense</div>
+        <div class="modal-close" onclick="closeModal('addExpenseModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Crop</label>
+          <select class="form-input" id="expCropSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-input" id="expCategory">
+              <option>Seeds</option>
+              <option>Fertilizer</option>
+              <option>Labor</option>
+              <option>Irrigation</option>
+              <option>Machinery</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Amount (₹)</label>
+            <input type="number" class="form-input" placeholder="0.00" id="expAmount">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-input" id="expDate">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes (optional)</label>
+            <input type="text" class="form-input" placeholder="Brief description…" id="expNotes">
+          </div>
+        </div>
+        <button class="btn-form-submit" onclick="addExpense()">Record Expense →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Sale Modal -->
+  <div class="modal-overlay" id="addSaleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">💰 Record Sale</div>
+        <div class="modal-close" onclick="closeModal('addSaleModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Crop</label>
+          <select class="form-input" id="saleCropSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-input" placeholder="0" id="saleQty" oninput="updateSalePreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select class="form-input" id="saleUnit" onchange="updateSalePreview()">
+              <option>Quintal</option>
+              <option>Ton</option>
+              <option>Kg</option>
+              <option>Number</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price per Unit (₹)</label>
+          <input type="number" class="form-input" placeholder="0.00" id="salePricePerUnit" oninput="updateSalePreview()">
+        </div>
+        <div class="calc-preview" id="salePreview">
+          <div class="calc-preview-label">Total Revenue</div>
+          <div class="calc-preview-value">₹ —</div>
+        </div>
+        <button class="btn-form-submit" style="margin-top:16px;" onclick="addSale()">Record Sale →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Expense Modal -->
+  <div class="modal-overlay" id="editExpenseModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit Expense</div>
+        <div class="modal-close" onclick="closeModal('editExpenseModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editExpenseId">
+        <div class="form-group">
+          <label class="form-label">Crop</label>
+          <select class="form-input" id="editExpCropSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-input" id="editExpCategory">
+              <option>Seeds</option>
+              <option>Fertilizer</option>
+              <option>Labor</option>
+              <option>Irrigation</option>
+              <option>Machinery</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Amount (₹)</label>
+            <input type="number" class="form-input" placeholder="0.00" id="editExpAmount">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-input" id="editExpDate">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes (optional)</label>
+            <input type="text" class="form-input" placeholder="Brief description…" id="editExpNotes">
+          </div>
+        </div>
+        <button class="btn-form-submit" onclick="saveEditedExpense()">Save Changes →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Sale Modal -->
+  <div class="modal-overlay" id="editSaleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit Sale</div>
+        <div class="modal-close" onclick="closeModal('editSaleModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editSaleId">
+        <div class="form-group">
+          <label class="form-label">Crop</label>
+          <select class="form-input" id="editSaleCropSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-input" placeholder="0" id="editSaleQty" oninput="updateEditSalePreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select class="form-input" id="editSaleUnit" onchange="updateEditSalePreview()">
+              <option>Quintal</option>
+              <option>Ton</option>
+              <option>Kg</option>
+              <option>Number</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price per Unit (₹)</label>
+          <input type="number" class="form-input" placeholder="0.00" id="editSalePricePerUnit" oninput="updateEditSalePreview()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="editSaleDate">
+        </div>
+        <div class="calc-preview" id="editSalePreview">
+          <div class="calc-preview-label">Total Revenue</div>
+          <div class="calc-preview-value">₹ —</div>
+        </div>
+        <button class="btn-form-submit" style="margin-top:16px;" onclick="saveEditedSale()">Save Changes →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Udhari Entry Modal -->
+  <div class="modal-overlay" id="addUdhariModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">📓 Add Udhari Entry</div>
+        <div class="modal-close" onclick="closeModal('addUdhariModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Entry Type</label>
+          <select class="form-input" id="addUdhariType">
+            <option value="take">Money to Take</option>
+            <option value="give">Money to Give</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Person's Name</label>
+            <input type="text" class="form-input" placeholder="e.g. Suresh Patil" id="addUdhariName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input" placeholder="e.g. +91 99887 76655" id="addUdhariPhone">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Amount (₹)</label>
+            <input type="number" class="form-input" placeholder="0.00" id="addUdhariAmount">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-input" id="addUdhariDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">What for / Notes</label>
+          <input type="text" class="form-input" placeholder="e.g. Seed purchase share" id="addUdhariNotes">
+        </div>
+        <button class="btn-form-submit" style="margin-top:16px;" onclick="addUdhariEntry()">Add Entry →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Udhari Entry Modal -->
+  <div class="modal-overlay" id="editUdhariModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit Udhari Entry</div>
+        <div class="modal-close" onclick="closeModal('editUdhariModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editUdhariId">
+        <div class="form-group">
+          <label class="form-label">Entry Type</label>
+          <select class="form-input" id="editUdhariType">
+            <option value="take">Money to Take</option>
+            <option value="give">Money to Give</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Person's Name</label>
+            <input type="text" class="form-input" id="editUdhariName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input" id="editUdhariPhone">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Amount (₹)</label>
+            <input type="number" class="form-input" id="editUdhariAmount">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-input" id="editUdhariDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">What for / Notes</label>
+          <input type="text" class="form-input" id="editUdhariNotes">
+        </div>
+        <button class="btn-form-submit" style="margin-top:16px;" onclick="saveEditedUdhari()">Save Changes →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fab" id="fab" onclick="handleFab()">＋</div>
+
+  <!-- Firebase Compatibility SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="database.js"></script>
+
+  <script src="state.js"></script>
+  <script src="helpers.js"></script>
+  <script src="auth.js"></script>
+  <script src="modals.js"></script>
+  <script src="crops.js"></script>
+  <script src="expenses.js"></script>
+  <script src="sales.js"></script>
+  <script src="weather.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="udhari.js"></script>
+  
+  <!-- jsPDF & jsPDF-autotable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  <script src="export.js"></script>
+
+  <script src="app.js"></script>
+
+</body>
+</html>

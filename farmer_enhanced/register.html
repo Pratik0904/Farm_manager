@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmLedger — Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Nunito:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="variables.css">
+  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="page active" id="registerPage">
+  <div class="auth-page">
+    <div class="auth-visual">
+      <div class="auth-visual-particles">
+        <div class="auth-particle" style="width:7px;height:7px;left:15%;top:35%;--dur:5.5s;--delay:0s;"></div>
+        <div class="auth-particle" style="width:4px;height:4px;left:55%;top:45%;--dur:4s;--delay:1.5s;"></div>
+        <div class="auth-particle" style="width:9px;height:9px;left:75%;top:65%;--dur:6s;--delay:0.8s;opacity:0.10;"></div>
+      </div>
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🌾</div>
+        <div>
+          <div class="auth-logo-text">FarmLedger</div>
+          <span class="auth-logo-sub">Crop Intelligence</span>
+        </div>
+      </div>
+      <div class="auth-crop-icons">
+        <div class="auth-crop-icon">🌱</div>
+        <div class="auth-crop-icon">🌾</div>
+        <div class="auth-crop-icon">🌻</div>
+      </div>
+      <div class="auth-visual-content">
+        <div class="auth-tagline">Grow Your<br/><span>Farm's</span><br/>Intelligence.</div>
+        <p class="auth-subtitle">Join thousands of farmers who manage their crop finances smarter with FarmLedger. Free, simple, and built for Indian agriculture.</p>
+        <div class="auth-stats">
+          <div class="auth-stat"><div class="auth-stat-num">Free</div><div class="auth-stat-label">Always</div></div>
+          <div class="auth-stat"><div class="auth-stat-num">2min</div><div class="auth-stat-label">Setup</div></div>
+          <div class="auth-stat"><div class="auth-stat-num">100%</div><div class="auth-stat-label">Offline Safe</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-form-wrap">
+        <div style="font-size:11px;color:var(--leaf);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">New Account 🌱</div>
+        <div class="auth-form-title">Start tracking your<br/>farm finances</div>
+        <div class="auth-form-sub">Takes less than 2 minutes — no card required</div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" placeholder="Ramesh Kumar" id="regName">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Location / Village</label>
+            <input type="text" class="form-input" placeholder="Nashik, Maharashtra" id="regLocation">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input" placeholder="+91 98765 43210" id="regPhone">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Land Owned</label>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <input type="number" class="form-input" placeholder="e.g. 5.5" id="regLandSize" style="flex:1;" oninput="updateLandPreview()">
+            <select class="form-input" id="regLandUnit" style="width:115px;" onchange="updateLandPreview()">
+              <option value="acre">Acres</option>
+              <option value="hectare">Hectares</option>
+            </select>
+          </div>
+          <div id="landPreview" style="font-size:12px;color:var(--sage);margin-top:5px;font-weight:600;"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="ramesh@farm.com" id="regEmail">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" placeholder="Min 8 chars, Upper, Lower, Number, Symbol" id="regPassword" oninput="checkPasswordStrength(this.value)">
+          <div class="pwd-strength" id="pwdStrength">
+            <div class="pwd-bar" id="bar1"></div>
+            <div class="pwd-bar" id="bar2"></div>
+            <div class="pwd-bar" id="bar3"></div>
+            <div class="pwd-bar" id="bar4"></div>
+          </div>
+          <div class="password-hint" id="pwdHint">Must include uppercase, lowercase, number, and special character</div>
+        </div>
+
+        <button class="btn-primary" onclick="handleRegister()"><span>Create My Farm Account →</span></button>
+
+        <div class="auth-switch">
+          Already have an account? <a href="login.html">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Firebase Compatibility SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="database.js"></script>
+
+  <script src="state.js"></script>
+  <script src="helpers.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

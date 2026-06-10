@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmLedger — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Nunito:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="variables.css">
+  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="page active" id="loginPage">
+  <div class="auth-page">
+    <div class="auth-visual">
+      <!-- Floating particles -->
+      <div class="auth-visual-particles">
+        <div class="auth-particle" style="width:8px;height:8px;left:20%;top:25%;--dur:5s;--delay:0s;"></div>
+        <div class="auth-particle" style="width:5px;height:5px;left:60%;top:40%;--dur:4s;--delay:1s;"></div>
+        <div class="auth-particle" style="width:10px;height:10px;left:35%;top:70%;--dur:6s;--delay:0.5s;opacity:0.12;"></div>
+        <div class="auth-particle" style="width:6px;height:6px;left:80%;top:60%;--dur:4.5s;--delay:2s;"></div>
+      </div>
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🌾</div>
+        <div>
+          <div class="auth-logo-text">FarmLedger</div>
+          <span class="auth-logo-sub">Crop Intelligence</span>
+        </div>
+      </div>
+      <div class="auth-seasons">
+        <div class="auth-season-dot"></div>
+        <div class="auth-season-dot"></div>
+        <div class="auth-season-dot"></div>
+      </div>
+      <div class="auth-crop-icons">
+        <div class="auth-crop-icon">🌾</div>
+        <div class="auth-crop-icon">🌽</div>
+        <div class="auth-crop-icon">🍅</div>
+      </div>
+      <div class="auth-visual-content">
+        <div class="auth-tagline">Track Every<br/><span>Harvest.</span><br/>Every Rupee.</div>
+        <p class="auth-subtitle">Complete financial intelligence for modern farmers. Monitor expenses, revenues, and profitability across all your crops in one place.</p>
+        <div class="auth-stats">
+          <div class="auth-stat">
+            <div class="auth-stat-num">12+</div>
+            <div class="auth-stat-label">Crop Types</div>
+          </div>
+          <div class="auth-stat">
+            <div class="auth-stat-num">5</div>
+            <div class="auth-stat-label">Categories</div>
+          </div>
+          <div class="auth-stat">
+            <div class="auth-stat-num">∞</div>
+            <div class="auth-stat-label">Seasons Tracked</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-form-wrap">
+        <div style="font-size:11px;color:var(--sage);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Welcome Back 🌱</div>
+        <div class="auth-form-title">Sign in to your<br/>farm account</div>
+        <div class="auth-form-sub">Access your complete crop financial dashboard</div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="ramu@example.com" id="loginEmail">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" placeholder="••••••••" id="loginPassword">
+        </div>
+        <div style="margin-bottom:24px;text-align:right;">
+          <a href="#" style="font-size:13px;color:var(--sage);font-weight:700;">Forgot password?</a>
+        </div>
+
+        <button class="btn-primary" onclick="handleLogin()"><span>Sign In to Dashboard →</span></button>
+
+        <div class="auth-switch">
+          Don't have an account? <a href="register.html">Create one free</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Firebase Compatibility SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="database.js"></script>
+
+  <script src="state.js"></script>
+  <script src="helpers.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

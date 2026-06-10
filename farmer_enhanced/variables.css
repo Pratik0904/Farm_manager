@@ -1,0 +1,145 @@
+/* ===== CSS VARIABLES & RESET ===== */
+
+:root {
+  /* Core Modern Professional Palette */
+  --soil:       #0F172A; /* Slate 900 */
+  --bark:       #1E293B; /* Slate 800 */
+  --clay:       #64748B; /* Slate 500 */
+  --wheat:      #F8FAFC; /* Slate 50 */
+  --wheat-light:#FFFFFF;
+  --straw:      #E2E8F0; /* Slate 200 */
+  
+  /* Primary Action Colors (Emerald/Teal variants) */
+  --sage:       #0F766E; /* Teal 700 */
+  --leaf:       #0D9488; /* Teal 600 */
+  --sprout:     #14B8A6; /* Teal 500 */
+  --sky:        #CCFBF1; /* Teal 50 */
+  
+  /* Backgrounds */
+  --cream:      #F8FAFC; /* Slate 50 */
+  --cream-dark: #F1F5F9; /* Slate 100 */
+  
+  /* Accents */
+  --amber:      #D97706; /* Amber 600 */
+  --amber-warm: #F59E0B; /* Amber 500 */
+  --rust:       #E11D48; /* Rose 600 */
+  --terracotta: #F43F5E; /* Rose 500 */
+  --gold:       #CA8A04; /* Yellow 600 */
+
+  /* Gradients */
+  --grad-earth:    linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  --grad-leaf:     linear-gradient(135deg, #0F766E 0%, #14B8A6 100%);
+  --grad-harvest:  linear-gradient(135deg, #B45309 0%, #D97706 100%);
+  --grad-dawn:     linear-gradient(160deg, #1E293B 0%, #0F172A 100%);
+  --grad-field:    linear-gradient(180deg, #0F766E 0%, #0D9488 100%);
+
+  /* Glass */
+  --glass:         rgba(255, 255, 255, 0.7);
+  --glass-b:       rgba(255, 255, 255, 0.5);
+  --glass-warm:    rgba(245, 158, 11, 0.1);
+  --glass-green:   rgba(20, 184, 166, 0.1);
+
+  /* Fonts */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'Roboto Mono', monospace;
+
+  /* Spacing & Radii */
+  --radius:    16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+
+  /* Shadows - More crisp and professional */
+  --shadow:       0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-lg:    0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-xl:    0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --shadow-green: 0 10px 15px -3px rgba(13, 148, 136, 0.2);
+  --shadow-gold:  0 10px 15px -3px rgba(217, 119, 6, 0.2);
+
+  /* Transitions */
+  --transition:      all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --spring:          all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--soil);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+input, select, textarea, button { font-family: inherit; }
+button { cursor: pointer; border: none; outline: none; }
+a { text-decoration: none; color: inherit; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--clay); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--bark); }
+
+/* ===== GLOBAL ANIMATIONS ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(212,168,83,0.5); }
+  70%  { box-shadow: 0 0 0 12px rgba(212,168,83,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,168,83,0); }
+}
+@keyframes grow-bar {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes wave-sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50%       { transform: rotate(1.5deg); }
+}
+@keyframes ripple-out {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+@keyframes leaf-spin {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes dash-draw {
+  from { stroke-dashoffset: 800; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
+}
