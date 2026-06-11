@@ -28,6 +28,16 @@
 .form-input::placeholder { color: rgba(44,26,14,0.30); }
 .form-input:hover:not(:focus) { border-color: rgba(100,116,139,0.35); }
 
+/* Prevent backdrop-filter and transform from breaking native select dropdown rendering */
+select.form-input {
+  backdrop-filter: none;
+  background: white; /* Ensure clean opaque background for native select dropdowns */
+  cursor: pointer;
+}
+select.form-input:focus {
+  transform: none;
+}
+
 /* ===================== CUSTOM SELECT ===================== */
 .custom-select { position: relative; width: 100%; }
 .custom-select-trigger {

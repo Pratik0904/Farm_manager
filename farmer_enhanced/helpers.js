@@ -103,3 +103,8 @@ function filterByDateRange(records, rangeType, customStart, customEnd) {
     }
   });
 }
+
+function getCropOptionText(c) {
+  const year = c.year || (c.startDate ? new Date(c.startDate).getFullYear() : '');
+  return `${c.name} (${c.season}${year ? ' ' + year : ''})`;
+}

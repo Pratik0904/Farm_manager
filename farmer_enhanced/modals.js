@@ -5,6 +5,10 @@ function openModal(id) {
     populateCropSelect('expCropSelect');
     document.getElementById('expDate').valueAsDate = new Date();
   }
+  if (id === 'addSprayModal') {
+    populateCropSelect('sprayCropSelect');
+    document.getElementById('sprayDate').valueAsDate = new Date();
+  }
   if (id === 'addSaleModal') {
     populateCropSelect('saleCropSelect');
     document.getElementById('saleDate').valueAsDate = new Date();
@@ -27,7 +31,7 @@ function populateCropSelect(selectId) {
   const sel   = document.getElementById(selectId);
   const crops = state.currentUser?.crops || [];
   sel.innerHTML = crops.length
-    ? crops.map(c => `<option value="${c.id}">${c.name} (${c.season})</option>`).join('')
+    ? crops.map(c => `<option value="${c.id}">${getCropOptionText(c)}</option>`).join('')
     : '<option value="">No crops added yet</option>';
 }
 
@@ -43,6 +47,7 @@ function handleFab() {
   const tabActions = {
     crops:    () => openModal('addCropModal'),
     expenses: () => openModal('addExpenseModal'),
+    spray:    () => openModal('addSprayModal'),
     sales:    () => openModal('addSaleModal'),
     udhari:   () => openModal('addUdhariModal'),
     dashboard:() => openModal('addCropModal'),

@@ -1,9 +1,9 @@
-// ===================== STATE =====================
 const state = {
   currentUser: null,
   users: {},
   currentTab: 'dashboard',
   selectedExpenseCropId: null,
+  selectedSprayCropId: null,
   compareMode: 'both'
 };
 
@@ -78,7 +78,8 @@ const DEMO_USER = {
     { id: 'u2', type: 'take', name: 'Mahendra Singh', phone: '+91 88776 65544', amount: 8000, date: '2025-05-28', notes: 'Tractor rent share' },
     { id: 'u3', type: 'give', name: 'Amit Sharma (Fertilizer)', phone: '+91 77665 54433', amount: 12000, date: '2025-06-01', notes: 'Fertilizer purchase credit' },
     { id: 'u4', type: 'give', name: 'Rajesh Kirana Store', phone: '+91 66554 43322', amount: 3500, date: '2025-06-05', notes: 'Daily farm supplies' }
-  ]
+  ],
+  sprayLogs: []
 };
 
 // Crop image map (key = keyword in crop name)

@@ -128,7 +128,7 @@ function startAutoCarousel(carouselId) {
 
 // Initialize all auto-playing carousels on load
 window.addEventListener('DOMContentLoaded', () => {
-  ['dashCarousel', 'cropsCarousel', 'expenseCarousel', 'salesCarousel', 'compareCarousel'].forEach(id => {
+  ['dashCarousel', 'cropsCarousel', 'expenseCarousel', 'sprayCarousel', 'salesCarousel', 'compareCarousel'].forEach(id => {
     startAutoCarousel(id);
   });
 });

@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "farmer_enhanced",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

@@ -63,7 +63,7 @@ function openEditSale(saleId) {
   // Populate crop select
   const sel = document.getElementById('editSaleCropSelect');
   sel.innerHTML = state.currentUser.crops.map(c =>
-    `<option value="${c.id}" ${c.id === sale.cropId ? 'selected' : ''}>${c.name}</option>`
+    `<option value="${c.id}" ${c.id === sale.cropId ? 'selected' : ''}>${getCropOptionText(c)}</option>`
   ).join('');
 
   updateEditSalePreview();

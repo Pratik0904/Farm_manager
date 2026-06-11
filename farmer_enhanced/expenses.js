@@ -40,7 +40,7 @@ function openEditExpense(expId) {
   // Populate crop select
   const sel = document.getElementById('editExpCropSelect');
   sel.innerHTML = state.currentUser.crops.map(c =>
-    `<option value="${c.id}" ${c.id === exp.cropId ? 'selected' : ''}>${c.name}</option>`
+    `<option value="${c.id}" ${c.id === exp.cropId ? 'selected' : ''}>${getCropOptionText(c)}</option>`
   ).join('');
 
   openModal('editExpenseModal');

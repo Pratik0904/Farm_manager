@@ -28,6 +28,7 @@ function renderTab(tab) {
   if (tab === 'dashboard') renderDashboard();
   if (tab === 'crops')     renderCrops();
   if (tab === 'expenses')  renderExpenses();
+  if (tab === 'spray')     renderSpray();
   if (tab === 'sales')     renderSales();
   if (tab === 'udhari')    renderUdhari();
   if (tab === 'compare')   renderCompare();

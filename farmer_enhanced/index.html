@@ -11,11 +11,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="variables.css">
-  <link rel="stylesheet" href="auth.css">
-  <link rel="stylesheet" href="layout.css">
-  <link rel="stylesheet" href="components.css">
-  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="variables.css?v=1.0.1">
+  <link rel="stylesheet" href="auth.css?v=1.0.1">
+  <link rel="stylesheet" href="layout.css?v=1.0.1">
+  <link rel="stylesheet" href="components.css?v=1.0.1">
+  <link rel="stylesheet" href="pages.css?v=1.0.1">
 </head>
 
 <body>
@@ -59,6 +59,9 @@
           </div>
           <div class="nav-item" onclick="switchTab('expenses', this)">
             <span class="nav-icon">💸</span> Expenses
+          </div>
+          <div class="nav-item" onclick="switchTab('spray', this)">
+            <span class="nav-icon">🧪</span> Spray Diary
           </div>
           <div class="nav-item" onclick="switchTab('sales', this)">
             <span class="nav-icon">📈</span> Sales & Revenue
@@ -135,9 +138,6 @@
                 <div class="profile-dropdown-divider"></div>
                 <button class="profile-dropdown-item" onclick="openEditProfile()">
                   <span>✏️</span> Edit Profile
-                </button>
-                <button class="profile-dropdown-item" onclick="testDatabaseConnection()" style="color: #0F766E;">
-                  <span>🔌</span> Test Database Connection
                 </button>
                 <button class="profile-dropdown-item reset" onclick="handleResetData()" style="color: #ef4444;">
                   <span>🗑️</span> Reset Farm Data
@@ -383,6 +383,55 @@
                     <div id="catBreakdown"></div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SPRAY DIARY TAB ===== -->
+        <div id="tab-spray" style="display:none;">
+          <div class="page-header expense-header">
+            <div class="carousel-wrap" id="sprayCarousel">
+              <div class="carousel-slide active" style="background-image:url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1581579186913-46ea8aee5ee6?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=1400&q=80');"></div>
+              <div class="carousel-slide" style="background-image:url('https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=1400&q=80');"></div>
+            </div>
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="setCarousel('sprayCarousel', 0)">Diary</div>
+              <div class="carousel-dot" onclick="setCarousel('sprayCarousel', 1)">Planning</div>
+              <div class="carousel-dot" onclick="setCarousel('sprayCarousel', 2)">Resources</div>
+              <div class="carousel-dot" onclick="setCarousel('sprayCarousel', 3)">Logistics</div>
+              <div class="carousel-dot" onclick="setCarousel('sprayCarousel', 4)">Soil</div>
+              <div class="carousel-dot" onclick="setCarousel('sprayCarousel', 5)">Irrigation</div>
+            </div>
+            <div class="page-header-overlay"></div>
+            <div class="page-header-deco"></div>
+            <div class="page-header-content">
+              <div class="page-breadcrumb">FarmLedger · Spray Diary</div>
+              <div class="page-title">Spray <span>Diary</span></div>
+              <div class="page-desc">Record and monitor your crop sprays</div>
+            </div>
+            <div class="page-header-actions">
+              <button class="btn-add" onclick="openModal('addSprayModal')">＋ Add Spray</button>
+            </div>
+          </div>
+
+          <div class="crop-tabs-wrap" id="sprayCropTabs"></div>
+
+          <div class="page-body">
+            <div class="expense-grid" style="grid-template-columns: 1fr;">
+              <div class="expense-list-card">
+                <div class="expense-list-header">
+                  <div>
+                    <div style="font-size:15px;font-weight:700;color:var(--soil);" id="sprayTabTitle">Spray Records</div>
+                    <div style="font-size:12px;color:var(--clay);margin-top:2px;font-weight:500;" id="sprayTabCropName">Select a crop</div>
+                  </div>
+                  <div style="font-size:12px;color:var(--clay);font-weight:600;" id="sprayCount">0 entries</div>
+                </div>
+                <div id="sprayList"></div>
               </div>
             </div>
           </div>
@@ -922,6 +971,141 @@
     </div>
   </div>
 
+  <!-- Add Spray Modal -->
+  <div class="modal-overlay" id="addSprayModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🧪 Add Spray Entry</div>
+        <div class="modal-close" onclick="closeModal('addSprayModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Crop</label>
+          <select class="form-input" id="sprayCropSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-input" placeholder="e.g. Neem Oil, Urea..." id="sprayProductName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product Type</label>
+            <select class="form-input" id="sprayProductType">
+              <option>Pesticide</option>
+              <option>Fungicide</option>
+              <option>Herbicide</option>
+              <option>Fertilizer</option>
+              <option>Growth Regulator</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Dose</label>
+            <input type="number" step="any" class="form-input" placeholder="0.00" id="sprayDose">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dose Unit</label>
+            <select class="form-input" id="sprayDoseUnit">
+              <option>ml</option>
+              <option>litre</option>
+              <option>g</option>
+              <option>kg</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Reason</label>
+            <select class="form-input" id="sprayReason">
+              <option>Preventive</option>
+              <option>Pest</option>
+              <option>Disease</option>
+              <option>Nutrient deficiency</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-input" id="sprayDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (optional)</label>
+          <textarea class="form-input" placeholder="Any additional notes..." id="sprayNotes" rows="2" style="resize: vertical;"></textarea>
+        </div>
+        <button class="btn-form-submit" onclick="addSpray()">Record Spray →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Spray Modal -->
+  <div class="modal-overlay" id="editSprayModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit Spray Entry</div>
+        <div class="modal-close" onclick="closeModal('editSprayModal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editSprayId">
+        <div class="form-group">
+          <label class="form-label">Crop</label>
+          <select class="form-input" id="editSprayCropSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-input" id="editSprayProductName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product Type</label>
+            <select class="form-input" id="editSprayProductType">
+              <option>Pesticide</option>
+              <option>Fungicide</option>
+              <option>Herbicide</option>
+              <option>Fertilizer</option>
+              <option>Growth Regulator</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Dose</label>
+            <input type="number" step="any" class="form-input" id="editSprayDose">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dose Unit</label>
+            <select class="form-input" id="editSprayDoseUnit">
+              <option>ml</option>
+              <option>litre</option>
+              <option>g</option>
+              <option>kg</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Reason</label>
+            <select class="form-input" id="editSprayReason">
+              <option>Preventive</option>
+              <option>Pest</option>
+              <option>Disease</option>
+              <option>Nutrient deficiency</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-input" id="editSprayDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (optional)</label>
+          <textarea class="form-input" id="editSprayNotes" rows="2" style="resize: vertical;"></textarea>
+        </div>
+        <button class="btn-form-submit" onclick="saveEditedSpray()">Save Changes →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Edit Sale Modal -->
   <div class="modal-overlay" id="editSaleModal">
     <div class="modal">
@@ -1062,25 +1246,26 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="database.js"></script>
+  <script src="database.js?v=1.0.1"></script>
 
-  <script src="state.js"></script>
-  <script src="helpers.js"></script>
-  <script src="auth.js"></script>
-  <script src="modals.js"></script>
-  <script src="crops.js"></script>
-  <script src="expenses.js"></script>
-  <script src="sales.js"></script>
-  <script src="weather.js"></script>
-  <script src="dashboard.js"></script>
-  <script src="udhari.js"></script>
+  <script src="state.js?v=1.0.1"></script>
+  <script src="helpers.js?v=1.0.1"></script>
+  <script src="auth.js?v=1.0.1"></script>
+  <script src="modals.js?v=1.0.1"></script>
+  <script src="crops.js?v=1.0.1"></script>
+  <script src="expenses.js?v=1.0.1"></script>
+  <script src="sales.js?v=1.0.1"></script>
+  <script src="weather.js?v=1.0.1"></script>
+  <script src="dashboard.js?v=1.0.1"></script>
+  <script src="udhari.js?v=1.0.1"></script>
+  <script src="spray.js?v=1.0.1"></script>
   
   <!-- jsPDF & jsPDF-autotable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
-  <script src="export.js"></script>
+  <script src="export.js?v=1.0.1"></script>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=1.0.1"></script>
 
 </body>
 </html>

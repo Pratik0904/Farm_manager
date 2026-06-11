@@ -193,6 +193,9 @@ async function deleteCrop(cropId) {
     state.currentUser.crops = state.currentUser.crops.filter(c => c.id !== cropId);
     state.currentUser.expenses = state.currentUser.expenses.filter(e => e.cropId !== cropId);
     state.currentUser.sales = state.currentUser.sales.filter(s => s.cropId !== cropId);
+    if (state.currentUser.sprayLogs) {
+      state.currentUser.sprayLogs = state.currentUser.sprayLogs.filter(s => s.cropId !== cropId);
+    }
 
     document.getElementById('cropCountBadge').textContent = state.currentUser.crops.length;
     showToast('Crop deleted.', 'success');
