@@ -446,3 +446,140 @@ async function dbResetUserData(userId) {
   // Commit the batch deletion atomically
   await batch.commit();
 }
+
+/**
+ * Diagnostic tool to verify connection and read/write rules for all subcollections.
+ */
+async function testDatabaseConnection() {
+  const user = auth.currentUser;
+  if (!user) {
+    showToast("Please sign in first.", "error");
+    return;
+  }
+  
+  // Close the profile dropdown
+  const drop = document.getElementById('profileDropdown');
+  if (drop) drop.classList.remove('open');
+
+  showToast("Running database connection & rules test...", "success");
+
+  const userId = user.uid;
+  const results = {
+    auth: { status: "OK", detail: `Logged in as ${user.email} (${userId})` },
+    profile: { status: "Testing...", color: "orange" },
+    crops: { status: "Testing...", color: "orange" },
+    expenses: { status: "Testing...", color: "orange" },
+    sales: { status: "Testing...", color: "orange" },
+    udhari: { status: "Testing...", color: "orange" }
+  };
+
+  // Function to render the modal
+  const renderTestModal = () => {
+    let existing = document.getElementById('dbTestModal');
+    if (existing) existing.remove();
+
+    const modalHtml = `
+      <div class="modal-overlay open" id="dbTestModal" style="z-index: 10000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; position: fixed; inset: 0;">
+        <div class="modal" style="max-width: 500px; width: 90%; border-radius: 16px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); background: white;">
+          <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="modal-title" style="font-size: 18px; font-weight: 800; color: #0F766E;">🔌 Database Diagnostics</div>
+            <div class="modal-close" onclick="document.getElementById('dbTestModal').remove()" style="cursor: pointer; font-size: 18px; font-weight: bold;">✕</div>
+          </div>
+          <div class="modal-body" style="font-size: 14px; line-height: 1.6; color: #334155;">
+            <p style="margin-bottom: 16px; font-weight: 500;">This tool verifies write access to the Firestore collections under your account. If any check fails, it indicates a Firestore security rules issue or network error.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; flex-wrap: wrap;">
+                <span><strong>User Account:</strong></span>
+                <span style="font-family: monospace; font-size: 11px; color: #64748b; word-break: break-all;">${results.auth.detail}</span>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+                <span>👤 Profile Write:</span>
+                <span style="font-weight: 700; color: ${results.profile.color || 'inherit'}">${results.profile.status}</span>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+                <span>🌱 Crops Collection:</span>
+                <span style="font-weight: 700; color: ${results.crops.color || 'inherit'}">${results.crops.status}</span>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+                <span>💸 Expenses Collection:</span>
+                <span style="font-weight: 700; color: ${results.expenses.color || 'inherit'}">${results.expenses.status}</span>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+                <span>💰 Sales Collection:</span>
+                <span style="font-weight: 700; color: ${results.sales.color || 'inherit'}">${results.sales.status}</span>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+                <span>📓 Udhari Collection:</span>
+                <span style="font-weight: 700; color: ${results.udhari.color || 'inherit'}">${results.udhari.status}</span>
+              </div>
+            </div>
+            
+            <div style="padding: 12px; background: #f8fafc; border-radius: 8px; border: 1.5px solid #e2e8f0; font-size: 12.5px;">
+              <strong>Diagnostic Message:</strong><br/>
+              <span id="dbDiagMsg" style="color: #64748b;">Running checks... Please wait.</span>
+            </div>
+          </div>
+          <div style="margin-top: 24px; text-align: right; display: flex; justify-content: flex-end;">
+            <button class="btn-form-submit" onclick="document.getElementById('dbTestModal').remove()" style="width: auto; padding: 8px 20px; font-size: 13px; margin: 0; background: #0F766E; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const div = document.createElement('div');
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div.firstElementChild);
+  };
+
+  renderTestModal();
+
+  // Run Profile test
+  try {
+    const userDoc = getUserRef(userId);
+    const doc = await userDoc.get();
+    const currentData = doc.exists ? doc.data() : {};
+    // Try updating profile with a test timestamp field
+    await userDoc.set({ ...currentData, diagTimestamp: Date.now() });
+    results.profile = { status: "✅ OK", color: "green" };
+  } catch (err) {
+    results.profile = { status: "❌ FAILED", color: "red" };
+    document.getElementById("dbDiagMsg").textContent = "Profile test failed: " + err.message;
+    console.error(err);
+  }
+  renderTestModal();
+
+  // Helper function to test collection write/delete
+  const testCollection = async (ref, key) => {
+    try {
+      const docId = 'diag_' + Date.now();
+      const testDoc = ref.doc(docId);
+      await testDoc.set({ testField: "diagnostics" });
+      await testDoc.delete();
+      results[key] = { status: "✅ OK", color: "green" };
+    } catch (err) {
+      results[key] = { status: "❌ FAILED", color: "red" };
+      document.getElementById("dbDiagMsg").textContent = `${key.toUpperCase()} test failed: ${err.message}`;
+      console.error(err);
+    }
+    renderTestModal();
+  };
+
+  await testCollection(getCropsRef(userId), "crops");
+  await testCollection(getExpensesRef(userId), "expenses");
+  await testCollection(getSalesRef(userId), "sales");
+  await testCollection(getUdhariRef(userId), "udhari");
+
+  // Final status update
+  const allOk = ["profile", "crops", "expenses", "sales", "udhari"].every(k => results[k].status.includes("OK"));
+  if (allOk) {
+    document.getElementById("dbDiagMsg").innerHTML = "<strong style='color: green;'>All checks passed successfully!</strong> Writes and reads to all collections are working perfectly.";
+  } else {
+    document.getElementById("dbDiagMsg").innerHTML += "<br/><br/><strong style='color: #ef4444;'>Action Required:</strong> If any collection failed, check that your Firebase Console Firestore security rules permit read/write operations to all subcollections under <code>users/{userId}</code>.";
+  }
+}

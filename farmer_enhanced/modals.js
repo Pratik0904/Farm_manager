@@ -5,7 +5,10 @@ function openModal(id) {
     populateCropSelect('expCropSelect');
     document.getElementById('expDate').valueAsDate = new Date();
   }
-  if (id === 'addSaleModal') populateCropSelect('saleCropSelect');
+  if (id === 'addSaleModal') {
+    populateCropSelect('saleCropSelect');
+    document.getElementById('saleDate').valueAsDate = new Date();
+  }
   if (id === 'addUdhariModal') {
     document.getElementById('addUdhariDate').valueAsDate = new Date();
     document.getElementById('addUdhariName').value = '';

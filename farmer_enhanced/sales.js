@@ -5,15 +5,16 @@ async function addSale() {
   const qty          = parseFloat(document.getElementById('saleQty').value);
   const unit         = document.getElementById('saleUnit').value;
   const pricePerUnit = parseFloat(document.getElementById('salePricePerUnit').value);
+  const date         = document.getElementById('saleDate').value;
 
-  if (!cropId || !qty || !pricePerUnit) { showToast('Fill all sale fields', 'error'); return; }
+  if (!cropId || !qty || !pricePerUnit || !date) { showToast('Fill all sale fields', 'error'); return; }
 
   const crop = state.currentUser.crops.find(c => c.id === cropId);
   if (crop && unit === 'Quintal' && qty > crop.land * 80) {
     if(!confirm(`Warning: Yield of ${qty} Quintals seems unusually high for a ${crop.land} acre farm. Do you want to proceed?`)) return;
   }
 
-  const sale = { cropId, qty, unit, pricePerUnit, date: new Date().toISOString().slice(0, 10) };
+  const sale = { cropId, qty, unit, pricePerUnit, date };
 
   try {
     showToast('Saving sale record...', 'success');

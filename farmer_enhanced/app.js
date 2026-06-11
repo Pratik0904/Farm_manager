@@ -7,8 +7,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // Set default dates if elements exist
   const cropStartEl = document.getElementById('cropStartDate');
   const expDateEl   = document.getElementById('expDate');
+  const saleDateEl  = document.getElementById('saleDate');
   if (cropStartEl) cropStartEl.valueAsDate = new Date();
   if (expDateEl) expDateEl.valueAsDate = new Date();
+  if (saleDateEl) saleDateEl.valueAsDate = new Date();
 
   // Greet
   if (typeof setGreet === 'function') setGreet();
