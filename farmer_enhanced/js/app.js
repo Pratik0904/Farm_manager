@@ -1,3 +1,64 @@
+// ===================== PWA — SERVICE WORKER & INSTALL =====================
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => console.log('[SW] Registered:', reg.scope))
+      .catch(err => console.warn('[SW] Registration failed:', err));
+  });
+}
+
+// Deferred install prompt
+let _pwaDeferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  _pwaDeferredPrompt = e;
+
+  // Show the install banner only if not dismissed this session
+  // and app is not already installed (standalone mode)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const wasDismissed = sessionStorage.getItem('pwa_banner_dismissed');
+
+  if (!isStandalone && !wasDismissed) {
+    const banner = document.getElementById('pwaInstallBanner');
+    if (banner) banner.style.display = 'flex';
+  }
+});
+
+// Hide banner if app becomes installed
+window.addEventListener('appinstalled', () => {
+  _pwaDeferredPrompt = null;
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.style.display = 'none';
+  console.log('[PWA] App installed successfully');
+});
+
+// Called by the "+ Add" button in the install banner
+function triggerPWAInstall() {
+  if (!_pwaDeferredPrompt) return;
+  _pwaDeferredPrompt.prompt();
+  _pwaDeferredPrompt.userChoice.then(choice => {
+    if (choice.outcome === 'accepted') {
+      console.log('[PWA] User accepted install');
+    } else {
+      console.log('[PWA] User dismissed install');
+    }
+    _pwaDeferredPrompt = null;
+    const banner = document.getElementById('pwaInstallBanner');
+    if (banner) banner.style.display = 'none';
+  });
+}
+
+// Called by the "✕" dismiss button in the install banner
+function dismissPWABanner() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.style.display = 'none';
+  sessionStorage.setItem('pwa_banner_dismissed', 'true');
+}
+
 // ===================== APP INIT =====================
 
 window.addEventListener('DOMContentLoaded', () => {
