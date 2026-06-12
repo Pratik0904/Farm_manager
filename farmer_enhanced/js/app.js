@@ -101,7 +101,20 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       try {
         // Load data from firestore
-        const userData = await dbLoadUserData(user.uid);
+        let userData;
+        try {
+          userData = await dbLoadUserData(user.uid, false);
+        } catch (netErr) {
+          console.warn("Network fetch failed, attempting to load from offline cache...", netErr);
+          try {
+            userData = await dbLoadUserData(user.uid, true);
+            state.isOffline = true;
+            showOfflineBanner();
+          } catch (cacheErr) {
+            throw new Error("You are offline and have no cached data on this device. Please connect to the internet to load your farm ledger.");
+          }
+        }
+
         state.currentUser = userData;
         
         // Profile dropdown
@@ -193,3 +206,14 @@ window.addEventListener('DOMContentLoaded', () => {
     startAutoCarousel(id);
   });
 });
+
+function showOfflineBanner() {
+  let banner = document.getElementById('offlineBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'offlineBanner';
+    banner.style.cssText = 'background: #f59e0b; color: white; text-align: center; padding: 10px; font-weight: 600; font-size: 13px; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
+    banner.innerHTML = '<span>⚠️ You are currently offline. Viewing cached data. Changes will sync when online.</span>';
+    document.body.prepend(banner);
+  }
+}

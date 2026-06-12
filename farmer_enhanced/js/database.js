@@ -61,14 +61,15 @@ function getSprayLogsRef(userId) {
 /**
  * Loads all user data (profile, crops, expenses, sales) from Firestore.
  */
-async function dbLoadUserData(userId) {
-  const userDoc = await getUserRef(userId).get();
+async function dbLoadUserData(userId, useCache = false) {
+  const options = useCache ? { source: 'cache' } : {};
+  const userDoc = await getUserRef(userId).get(options);
   if (!userDoc.exists) {
     // If it's the demo user and doc doesn't exist, seed it!
     const currentUserEmail = auth.currentUser ? auth.currentUser.email : '';
     if (currentUserEmail === 'demo@farm.com') {
       await dbSeedDemoUser(userId);
-      return dbLoadUserData(userId); // Retry loading
+      return dbLoadUserData(userId, useCache); // Retry loading
     }
     throw new Error("User profile not found in database.");
   }
@@ -80,33 +81,33 @@ async function dbLoadUserData(userId) {
   userData.sales = [];
 
   // Fetch crops
-  const cropsSnap = await getCropsRef(userId).get();
+  const cropsSnap = await getCropsRef(userId).get(options);
   cropsSnap.forEach(doc => {
     userData.crops.push({ id: doc.id, ...doc.data() });
   });
 
   // Fetch expenses
-  const expensesSnap = await getExpensesRef(userId).get();
+  const expensesSnap = await getExpensesRef(userId).get(options);
   expensesSnap.forEach(doc => {
     userData.expenses.push({ id: doc.id, ...doc.data() });
   });
 
   // Fetch sales
-  const salesSnap = await getSalesRef(userId).get();
+  const salesSnap = await getSalesRef(userId).get(options);
   salesSnap.forEach(doc => {
     userData.sales.push({ id: doc.id, ...doc.data() });
   });
 
   // Fetch Udhari
   userData.udhari = [];
-  const udhariSnap = await getUdhariRef(userId).get();
+  const udhariSnap = await getUdhariRef(userId).get(options);
   udhariSnap.forEach(doc => {
     userData.udhari.push({ id: doc.id, ...doc.data() });
   });
 
   // Fetch Spray Logs
   userData.sprayLogs = [];
-  const sprayLogsSnap = await getSprayLogsRef(userId).get();
+  const sprayLogsSnap = await getSprayLogsRef(userId).get(options);
   sprayLogsSnap.forEach(doc => {
     userData.sprayLogs.push({ id: doc.id, ...doc.data() });
   });
