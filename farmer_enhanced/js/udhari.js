@@ -62,17 +62,17 @@ function renderUdhariCard(u) {
     <div class="udhari-card ${u.type}">
       <div class="udhari-card-header">
         <div class="udhari-card-info">
-          <div class="udhari-card-name">👤 ${u.name}</div>
+          <div class="udhari-card-name">👤 ${escapeHTML(u.name)}</div>
           ${u.phone ? `
             <div class="udhari-card-contacts">
-              <a href="tel:${u.phone}" class="contact-btn phone-btn">📞 ${u.phone}</a>
+              <a href="tel:${escapeHTML(u.phone)}" class="contact-btn phone-btn">📞 ${escapeHTML(u.phone)}</a>
               <a href="${waLink}" target="_blank" class="contact-btn wa-btn">💬 WhatsApp</a>
             </div>` : ''}
         </div>
         <div class="udhari-card-amount">₹${fmtNum(u.amount)}</div>
       </div>
       <div class="udhari-card-body">
-        <div class="udhari-card-notes">📋 ${u.notes || 'No description'}</div>
+        <div class="udhari-card-notes">📋 ${escapeHTML(u.notes) || 'No description'}</div>
         <div class="udhari-card-date">📅 ${formattedDate}</div>
       </div>
       <div class="udhari-card-actions">

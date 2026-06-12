@@ -237,7 +237,7 @@ function renderCrops() {
         </div>
       </div>
       <div class="crop-card-body">
-        <div class="crop-card-name">${crop.name}</div>
+        <div class="crop-card-name">${escapeHTML(crop.name)}</div>
         <div class="crop-card-meta">
           <div class="crop-card-meta-item">🌿 <strong>${crop.land}</strong> acres</div>
           <div class="crop-card-meta-item">📅 <strong>${formatDate(crop.startDate)}</strong></div>

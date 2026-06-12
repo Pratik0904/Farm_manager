@@ -229,7 +229,7 @@ function renderSales() {
   grid.innerHTML = filteredSales.map(sa => {
     const crop = crops.find(c => c.id === sa.cropId);
     return `<div class="sale-card">
-      <div class="sale-crop-name">${crop ? crop.name : 'Unknown Crop'}</div>
+      <div class="sale-crop-name">${crop ? escapeHTML(crop.name) : 'Unknown Crop'}</div>
       <div class="sale-row">
         <div class="sale-row-label">📦 ${sa.qty} ${sa.unit} × ₹${fmtNum(sa.pricePerUnit)}</div>
         <div class="sale-row-value" style="font-size:18px;font-weight:800;color:var(--sage);">₹${fmtNum(sa.qty * sa.pricePerUnit)}</div>

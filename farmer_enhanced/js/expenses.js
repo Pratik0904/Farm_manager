@@ -232,8 +232,8 @@ function renderExpenseContent() {
       <div class="expense-item">
         <div class="expense-cat-icon ${CAT_COLORS[e.category]}">${CAT_ICONS[e.category]}</div>
         <div class="expense-item-info">
-          <div class="expense-item-name">${e.category} <span style="font-size:11px;color:var(--clay);font-weight:normal;margin-left:6px;">(${eCropName})</span></div>
-          <div class="expense-item-meta">${formatDate(e.date)}${e.notes ? ' · ' + e.notes : ''}</div>
+          <div class="expense-item-name">${escapeHTML(e.category)} <span style="font-size:11px;color:var(--clay);font-weight:normal;margin-left:6px;">(${escapeHTML(eCropName)})</span></div>
+          <div class="expense-item-meta">${formatDate(e.date)}${e.notes ? ' · ' + escapeHTML(e.notes) : ''}</div>
         </div>
         <div class="expense-item-amount">₹${fmtNum(e.amount)}</div>
         <div style="display:flex;gap:6px;margin-left:10px;flex-shrink:0;">

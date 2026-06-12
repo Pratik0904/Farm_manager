@@ -74,7 +74,7 @@ function renderDashboard() {
           <div class="dash-crop-item">
             <div class="dash-crop-img" style="background-image:url('${imgUrl}')"></div>
             <div class="dash-crop-main">
-              <div class="dash-crop-name">${crop.name}</div>
+              <div class="dash-crop-name">${escapeHTML(crop.name)}</div>
               <div class="dash-crop-meta">
                 <span>🌿 ${crop.land} ac</span> &nbsp;&nbsp;
                 <span class="status-badge status-${crop.status.toLowerCase()}" style="padding:2px 8px;font-size:10px;">${crop.status === 'Growing' ? '🌱 ' : '✅'} ${crop.status}</span>
@@ -464,7 +464,7 @@ function renderCompare() {
     const fmtCurrency = (val) => (val >= 0 ? '+' : '') + '₹' + fmtNum(val);
 
     return `<tr>
-      <td><strong>${name}</strong>${badge}<div style="font-size:10px;color:var(--clay);margin-top:2px;">${tyCrop ? tyCrop.land + 'ac' : '0ac'} vs ${lyCrop ? lyCrop.land + 'ac' : '0ac'}</div></td>
+      <td><strong>${escapeHTML(name)}</strong>${badge}<div style="font-size:10px;color:var(--clay);margin-top:2px;">${tyCrop ? tyCrop.land + 'ac' : '0ac'} vs ${lyCrop ? lyCrop.land + 'ac' : '0ac'}</div></td>
       <td class="${tyFin.profit >= 0 ? 'profit-pos' : 'profit-neg'}">
         <div>${tyCrop ? fmtCurrency(tyFin.profit) : '—'}</div>
         <div style="font-size:10px; opacity:0.7; font-weight:normal;">${tyCrop ? fmtCurrency(Math.round(tyProfitAcre)) + '/ac' : ''}</div>

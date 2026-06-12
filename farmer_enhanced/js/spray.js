@@ -125,13 +125,13 @@ function renderSprayContent() {
         <div class="expense-cat-icon ${colClass}">${icon}</div>
         <div class="expense-item-info">
           <div class="expense-item-name">
-            <strong>${s.productName}</strong> 
-            <span class="status-badge" style="font-size: 10px; padding: 2px 8px; margin-left: 8px; background: rgba(100,116,139,0.08); color: var(--soil);">${s.productType}</span>
-            <span style="font-size:11px;color:var(--clay);font-weight:normal;margin-left:6px;">(${sCropName})</span>
+            <strong>${escapeHTML(s.productName)}</strong> 
+            <span class="status-badge" style="font-size: 10px; padding: 2px 8px; margin-left: 8px; background: rgba(100,116,139,0.08); color: var(--soil);">${escapeHTML(s.productType)}</span>
+            <span style="font-size:11px;color:var(--clay);font-weight:normal;margin-left:6px;">(${escapeHTML(sCropName)})</span>
           </div>
           <div class="expense-item-meta">
-            ${formatDate(s.date)} · Dose: ${s.dose} ${s.doseUnit} · Reason: ${s.reason}
-            ${s.notes ? `<div style="margin-top: 4px; font-style: italic; color: var(--clay);">${s.notes}</div>` : ''}
+            ${formatDate(s.date)} · Dose: ${s.dose} ${escapeHTML(s.doseUnit)} · Reason: ${escapeHTML(s.reason)}
+            ${s.notes ? `<div style="margin-top: 4px; font-style: italic; color: var(--clay);">${escapeHTML(s.notes)}</div>` : ''}
           </div>
         </div>
         <div style="display:flex;gap:6px;margin-left:10px;flex-shrink:0;">

@@ -1,5 +1,18 @@
 // ===================== HELPERS =====================
 
+function escapeHTML(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>'"]/g, function(match) {
+    switch (match) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case "'": return '&#39;';
+      case '"': return '&quot;';
+    }
+  });
+}
+
 function fmtNum(n) {
   if (!n) return '0';
   return n.toLocaleString('en-IN');
